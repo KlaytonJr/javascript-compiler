@@ -75,7 +75,7 @@ TOKEN:
 
 TOKEN:
 {
-	< #BOOLEANO: <TRUE> | <FALSE> >
+	< BOOLEANO: "true" | "false" >
 }
 
 TOKEN: 
@@ -96,11 +96,6 @@ TOKEN:
 	|	<IF: "if">
 	|	<ELSE: "else">
 	|	<WHILE: "while">
-	|	<TRUE: "true">
-	|   <FALSE: "false">
-	|   <ERROR: "err">
-	|	<SWITCH: "switch">
-	|	<CASE: "case">
 }
 
 // Characteres -----------------------------------------------------------------------------------------------------------------------
@@ -160,19 +155,6 @@ TOKEN:
 	| 	<ATRIBUICAO_OR: "|=">
 }
 
-// Operadores Relacionais -----------------------------------------------------------------------------------------------------------------------
-TOKEN:
-{
-		<MENOR: "<">
-	|	<MAIOR: ">">
-	|	<MENOR_IGUAL: "<=">
-	|	<MAIOR_IGUAL: ">=">
-    |	<IGUALDADE: "==">
-	|	<DIFERENCA: "!=">
-	|	<IGUALDADE_ESTRITA: "===">
-	|	<DIFERENCA_ESTRITA: "!==">
-}
-
 // Operadores Lógicos ------------------------------------------------------------------------------------------------------------------------------
 TOKEN:
 {
@@ -219,13 +201,13 @@ TOKEN:
 
 TOKEN:
 {
-    < #DELIMITADOR:
-            <AP>
-        |   <AC>
-        |   <ACH>
-        |   <FP>
-        |   <FC>
-        |   <FCH>
+    < DELIMITADOR:
+            "("
+        |   ")"
+        |   "{"
+        |   "}"
+        |   "["
+        |   "]"
     >
 }
 
@@ -338,10 +320,6 @@ TOKEN:
     < IDENTIFICADOR: (<LETRA> | <CIFRAO> | <UNDERLINE>) (<LETRA> | <DIGITO> | <CIFRAO> | <UNDERLINE>)* >
 }
 
-TOKEN:
-{
-    < DECLARACAO_VARIAVEL: <TIPO_VARIAVEL> <IDENTIFICADOR> >
-}
 
 TOKEN:
 {
@@ -398,7 +376,13 @@ void linha():
 {}
 {
     // TODO: Verificar itens aqui!
-    declaracaoImport() | <DECLARACAO_VARIAVEL> | <EXPRESSAO> | <COMANDO_ENTRADA> | <COMANDO_SAIDA> | <OP_ATRIBUICAO> | (expressaoLogica()) (";")?
+    (declaracaoImport() | declaracaoVariavel() | <EXPRESSAO> | <COMANDO_ENTRADA> | <COMANDO_SAIDA> | <OP_ATRIBUICAO> | (expressaoLogica()) ) (";")?
+}
+
+void declaracaoVariavel():
+{}
+{
+  <TIPO_VARIAVEL> <IDENTIFICADOR> 
 }
 
 void declaracaoImport():
