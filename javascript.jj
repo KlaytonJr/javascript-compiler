@@ -1,0 +1,360 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  static = true;
+}
+
+PARSER_BEGIN(javascript)
+
+public class javascript
+{
+  public static void main(String args []) throws ParseException
+  {
+    try {
+		String programa = Arquivo.Read("./ex.txt");
+		new javascript(new java.io.StringReader(programa)).PROGRAMA();
+		System.out.println("\n\nA Sintaxe Correta. Tokens Identificados.");
+	}catch(Throwable e) {
+		System.out.println("\n\nErro na sintaxe: "+e.getMessage());
+	}
+  }
+}
+
+PARSER_END(javascript)
+
+//Expressões ignoradas --------------------------------------------------------------------------------------------------------------
+
+// TODO: Tirei o " " daqui! &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+SKIP:
+{	"\r" | "\t" | "\n" |
+	"//" : comentarioSimples |
+	"/*" : comentarioLongo
+}
+
+<comentarioSimples> SKIP:
+{
+	"\n" : DEFAULT
+	| < ~[]> 
+}
+
+<comentarioLongo> SKIP:
+{
+	"*/": DEFAULT
+	| < ~[]> 
+}
+
+// Palavras Reservadas -----------------------------------------------------------------------------------------------------------------
+TOKEN:
+{		<NULL: "null">
+	|	<UNDEFINED: "undefined">
+	|	<IMPORT: "import">
+	|	<FROM: "from">
+	|	<CLASS: "class">
+	|	<RETURN: "return">
+	|	<PRINT: "console.log">
+	|	<PROMPT: "prompt">
+	|	<IF: "if">
+	|	<ELSE: "else">
+	|	<WHILE: "while">
+	|	<TRUE: "true">
+	|   <FALSE: "false">
+	|   <ERROR: "err">
+	|	<SWITCH: "switch">
+	|	<CASE: "case">
+}
+
+// primitivos ---------------------------------------------------------------------------------------------------------------------
+TOKEN:
+{
+    <LETRA: ["A"-"Z"] | ["a"-"z"] >
+}
+
+TOKEN:
+{
+    <ASPAS: "\"" >
+}
+
+TOKEN:
+{
+	< DIGITO: ["0"-"9"] >
+}
+
+TOKEN:
+{
+	< #BOOLEANO: <TRUE> | <FALSE> >
+}
+
+TOKEN: 
+{
+    < TIPO_VARIAVEL: ("let" | "var" | "const") <VAZIO> >
+}
+
+//Delimitadores -----------------------------------------------------------------------------------------------------------------------
+TOKEN:
+{
+		<AC: "{">
+	|	<FC: "}">
+	|	<AP: "(">
+	|	<FP: ")">
+	|	<ACH: "[">
+	|	<FCH: "]">
+	|	<VIRGULA: ",">
+	|	<PONTO: ".">
+	|	<PONTO_VIRGULA: ";">
+	|	<DOIS_PONTOS: ":">
+	|	<ARROBA: "@">
+	|	<HASHTAG: "#">
+	|	<CIFRAO: "$">
+	|	<TREMA: "¨">
+	|	<LIBRA: "£">
+	|	<EURO: "¢">
+	|	<NEGACAO_CHAR: "¬">
+	|	<UNDERLINE: "_">
+	|	<SS: "§">
+	|	<VAZIO: " ">
+	|	<CONTRA_BARRA: "\\">
+}
+
+// Operadores Aritméticos -------------------------------------------------------------------------------------------------------------------------
+TOKEN:
+{
+		<SOMA: "+">
+	|	<SUBTRACAO: "-">
+	|	<MUTIPLICACAO: "*">
+	|	<DIVISAO: "/">
+	|	<MODULO: "%">
+	|	<OU_EXCLUSIVO: "^">
+	|	<E: "&">
+	|	<OU: "|">
+	|	<EXPONENCIAL: "**">
+}
+
+TOKEN:
+{
+    < #OP_ARITMETICO:
+            <SOMA>
+        |   <SUBTRACAO>
+        |   <MUTIPLICACAO>
+        |   <DIVISAO>
+        |   <MODULO>
+        |   <EXPONENCIAL>
+    > 
+}
+
+// Operadores de Atruibuição ---------------------------------------------------------------------------------------------------------------------
+TOKEN:
+{
+		<ATRIBUICAO: "=">
+	|	<INCREMENTO: "++">
+	|	<DECREMENTO: "--">
+    |	<ATRIBUICAO_SOMA: "+=">
+	|	<ATRIBUICAO_SUBTRACAO: "-=">
+	|	<ATRIBUICAO_MULTIPLICACAO: "*=">
+	|	<ATRIBUICAO_DIVISAO: "/=">
+	| 	<ATRIBUICAO_RESTO: "%=">
+	| 	<ATRIBUICAO_EXPONENCIAL: "**=">
+	| 	<ATRIBUICAO_AND: "&=">
+	| 	<ATRIBUICAO_XOR: "^=">
+	| 	<ATRIBUICAO_OR: "|=">
+}
+
+TOKEN:
+{
+    < #SIMBOLO_ATRIBUICAO:
+            <ATRIBUICAO>
+        |   <ATRIBUICAO_SOMA>
+        |   <ATRIBUICAO_SUBTRACAO>
+        |   <ATRIBUICAO_MULTIPLICACAO>
+        |   <ATRIBUICAO_DIVISAO>
+        |   <ATRIBUICAO_RESTO>
+        |   <ATRIBUICAO_EXPONENCIAL>
+        |   <ATRIBUICAO_AND>
+        |   <ATRIBUICAO_XOR>
+        |   <ATRIBUICAO_OR>
+    >
+}
+
+// Operadores Relacionais -----------------------------------------------------------------------------------------------------------------------
+TOKEN:
+{
+		<MENOR: "<">
+	|	<MAIOR: ">">
+	|	<MENOR_IGUAL: "<=">
+	|	<MAIOR_IGUAL: ">=">
+    |	<IGUALDADE: "==">
+	|	<DIFERENCA: "!=">
+	|	<IGUALDADE_ESTRITA: "===">
+	|	<DIFERENCA_ESTRITA: "!==">
+}
+
+TOKEN:
+{
+    < #OP_COMPARACAO:
+            <MENOR>
+        |   <MAIOR>
+        |   <MAIOR_IGUAL>
+        |   <MENOR_IGUAL>
+        |   <IGUALDADE>
+        |   <DIFERENCA>
+        |   <IGUALDADE_ESTRITA>
+        |   <DIFERENCA_ESTRITA>
+    >
+}
+
+// Operadores Lógicos ------------------------------------------------------------------------------------------------------------------------------
+TOKEN:
+{
+		<AND: "&&">
+	|	<OR: "||">
+	|	<NEGACAO: "!">
+	|	<NOT: "~">
+}
+
+// Variáveis de Suporte ----------------------------------------------------------------------------------------------------------------------------------------
+
+TOKEN:
+{
+    < #SIMBOLOS_PERMITIDOS:
+            <NEGACAO> 
+        |   <ARROBA>
+        |   <HASHTAG> 
+        |   <CIFRAO> 
+        |   <MODULO>
+        |   <TREMA>
+        |   <E>
+        |   <AP>
+        |   <FP>
+        |   <NEGACAO>
+        |   <LIBRA>
+        |   <EURO>
+        |   <NEGACAO_CHAR>
+        |   <UNDERLINE>
+        |   <SUBTRACAO>
+        |   <SOMA>
+        |   <SS>
+        |   <ATRIBUICAO>
+        |   <PONTO>
+        |   <VIRGULA>
+        |   <DOIS_PONTOS>
+        |   <MENOR>
+        |   <MAIOR>
+        |   <OU>
+        |   <DIVISAO>
+        |   <VAZIO>
+    >
+}
+
+TOKEN:
+{
+    < #LIMITADOR:
+            <AP>
+        |   <AC>
+        |   <ACH>
+        |   <FP>
+        |   <FC>
+        |   <FCH>
+    >
+}
+
+//numeros -----------------------------------------------------------------------------------------------------------------------------------------
+TOKEN:
+{  
+    < DIGITO_DECIMAL: (<DIGITO>)+ >
+}
+
+TOKEN:
+{
+	< INTEIRO_DECIMAL_LITERAL: 
+		("+" | "-")? <DIGITO> (<DIGITO_DECIMAL>)?
+	>
+}
+
+TOKEN:
+{ 
+	< DECIMAL_LITERAL :
+		<INTEIRO_DECIMAL_LITERAL> "." (<DIGITO_DECIMAL>)? (<PARTE_EXPOENTE>)?
+	| 
+		"." <DIGITO_DECIMAL> (<PARTE_EXPOENTE>)?
+	| 
+		<INTEIRO_DECIMAL_LITERAL> (<PARTE_EXPOENTE>)? 
+	>
+|
+	< #PARTE_EXPOENTE: ("e" | "E") (["+","-"])? <DIGITO_DECIMAL> >
+}
+
+// String --------------------------------------------------------------------------------------------------------------------
+TOKEN:
+{
+    < STRING : <ASPAS> (<LETRA> | <DIGITO> | <SIMBOLOS_PERMITIDOS>)* <ASPAS> > 
+}
+
+// Atribuições ---------------------------------------------------------------------------------------------------------------
+
+TOKEN:
+{
+    < IDENTIFICADOR: (<LETRA> | <CIFRAO> | <UNDERLINE>) (<LETRA> | <DIGITO> | <CIFRAO> | <UNDERLINE>)* >
+}
+
+TOKEN:
+{
+    < DECLARACAO_VARIAVEL: <TIPO_VARIAVEL> <IDENTIFICADOR> >
+}
+
+TOKEN:
+{
+    // TODO: Colocar chamarFuncao *********
+    // TODO: Arruamar lógica LIMITADOR
+    < EXPRESSAO: (<DECIMAL_LITERAL> | <STRING> | <BOOLEANO> | <LIMITADOR> ) (<VAZIO>)? ((<OP_ARITMETICO> | <OP_COMPARACAO>) (<VAZIO>)? (<DECIMAL_LITERAL> | <STRING> | <BOOLEANO> | <LIMITADOR>))* >
+}
+
+TOKEN:
+{
+    // TODO: Colocar declaraçãoDeFuncao ************
+    < OP_ATRIBUICAO: (<TIPO_VARIAVEL>)? <IDENTIFICADOR> <SIMBOLO_ATRIBUICAO> (<EXPRESSAO>)>
+}
+
+// Entrada e Saída -----------------------------------------------------------------------------------------------------------------------------------------------------------
+TOKEN:
+{
+    < COMANDO_ENTRADA: <PROMPT> (<VAZIO>)? <AP> <STRING> <FP> > 
+}
+
+TOKEN:
+{
+    // TODO: Colocar listaParametrosChamada ***
+    < COMANDO_SAIDA: <PRINT> (<VAZIO>)? <AP> <STRING> <FP> > 
+}
+
+// Operadores Relacionais ---------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Operadores Aritméticos ---------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Operadores Booleanos -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+// FUÇÕES
+    // Declaração
+    // Chamada
+
+// Laços de Repetição
+
+// Estrutura condicional
+
+
+void Empty() : {}
+{
+    {}
+}
+
+void PROGRAMA():
+{}
+{
+  linha() (";")?
+}
+
+void linha():
+{}
+{
+  <DECIMAL_LITERAL> | <STRING> | <DECLARACAO_VARIAVEL> | <EXPRESSAO> | <COMANDO_ENTRADA> | <COMANDO_SAIDA>
+}
