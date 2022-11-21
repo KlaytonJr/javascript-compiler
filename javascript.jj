@@ -22,13 +22,14 @@ public class javascript
         Scanner sc = new Scanner(file);
 
         while (sc.hasNextLine()) {
-            System.out.println("Aqui");
-		    new javascript(new java.io.StringReader(sc.nextLine())).PROGRAMA();
+            String line = sc.nextLine();
+            System.out.println(line);
+		    new javascript(new java.io.StringReader(line)).PROGRAMA();
         }
 		// new javascript(new java.io.StringReader(programa)).PROGRAMA();
 		System.out.println("\n\nA Sintaxe Correta. Tokens Identificados.");
 	}catch(Throwable e) {
-		System.out.println("\n\nErro na sintaxe: "+e.getMessage());
+		System.out.println("\n\nErro na sintaxe: " + e.getMessage());
 	}
   }
 }
@@ -64,7 +65,7 @@ TOKEN:
 
 TOKEN:
 {
-    <ASPAS: "\"" >
+    <ASPAS: "\"" | "\'" | "`" >
 }
 
 TOKEN:
@@ -140,14 +141,14 @@ TOKEN:
 	|	<E: "&">
 	|	<OU: "|">
 	|	<EXPONENCIAL: "**">
+    |	<INCREMENTO: "++">
+	|	<DECREMENTO: "--">
 }
 
 // Operadores de Atruibuição ---------------------------------------------------------------------------------------------------------------------
 TOKEN:
 {
 		<ATRIBUICAO: "=">
-	|	<INCREMENTO: "++">
-	|	<DECREMENTO: "--">
     |	<ATRIBUICAO_SOMA: "+=">
 	|	<ATRIBUICAO_SUBTRACAO: "-=">
 	|	<ATRIBUICAO_MULTIPLICACAO: "*=">
@@ -179,6 +180,7 @@ TOKEN:
 	|	<OR: "||">
 	|	<NEGACAO: "!">
 	|	<NOT: "~">
+    
 }
 
 // Variáveis de Suporte ----------------------------------------------------------------------------------------------------------------------------------------
@@ -229,23 +231,23 @@ TOKEN:
 
 TOKEN:
 {
-    < #SIMBOLO_BOOLEANO:
-            <AND>
-        |   <OR>
+    < SIMBOLO_BOOLEANO:
+            "&&"
+        |   "||"
     >
 }
 
 TOKEN:
 {
-    < #SIMBOLO_RELACIONAL:
-            <MENOR>
-        |   <MAIOR>
-        |   <MAIOR_IGUAL>
-        |   <MENOR_IGUAL>
-        |   <IGUALDADE>
-        |   <DIFERENCA>
-        |   <IGUALDADE_ESTRITA>
-        |   <DIFERENCA_ESTRITA>
+    < SIMBOLO_RELACIONAL:
+            "<"
+        |   ">"
+        |   "<="
+        |   ">="
+        |   "=="
+        |   "!="
+        |   "==="
+        |   "!=="
     >
 }
 
@@ -299,7 +301,7 @@ TOKEN:
     > 
 }
 
-//numeros -----------------------------------------------------------------------------------------------------------------------------------------
+//numeros -OK-
 TOKEN:
 {  
     < DIGITO_DECIMAL: (<DIGITO>)+ >
@@ -315,20 +317,18 @@ TOKEN:
 TOKEN:
 { 
 	< DECIMAL_LITERAL :
-		<INTEIRO_DECIMAL_LITERAL> "." (<DIGITO_DECIMAL>)? (<PARTE_EXPOENTE>)?
-	| 
-		"." <DIGITO_DECIMAL> (<PARTE_EXPOENTE>)?
-	| 
-		<INTEIRO_DECIMAL_LITERAL> (<PARTE_EXPOENTE>)? 
+            <INTEIRO_DECIMAL_LITERAL> "." (<DIGITO_DECIMAL>)? (<PARTE_EXPOENTE>)?
+        | 	"." <DIGITO_DECIMAL> (<PARTE_EXPOENTE>)?
+        | 	<INTEIRO_DECIMAL_LITERAL> (<PARTE_EXPOENTE>)? 
 	>
 |
 	< #PARTE_EXPOENTE: ("e" | "E") (["+","-"])? <DIGITO_DECIMAL> >
 }
 
-// String --------------------------------------------------------------------------------------------------------------------
+// String -OK-
 TOKEN:
 {
-    < STRING : <ASPAS> (<LETRA> | <DIGITO> | <SIMBOLOS_PERMITIDOS>)* <ASPAS> > 
+    < STRING : <ASPAS> (<LETRA> | <DIGITO> | <SIMBOLOS_PERMITIDOS> | <VAZIO>)* <ASPAS> > 
 }
 
 // Atribuições ---------------------------------------------------------------------------------------------------------------
@@ -356,7 +356,7 @@ TOKEN:
     < OP_ATRIBUICAO: (<TIPO_VARIAVEL>)? <IDENTIFICADOR> (<VAZIO>)? <SIMBOLO_ATRIBUICAO> (<VAZIO>)? (<EXPRESSAO>)>
 }
 
-// Entrada e Saída -----------------------------------------------------------------------------------------------------------------------------------------------------------
+// Entrada e Saída -OK-
 TOKEN:
 {
     < COMANDO_ENTRADA: <PROMPT> (<VAZIO>)? <AP> <STRING> <FP> > 
@@ -391,12 +391,36 @@ void Empty() : {}
 void PROGRAMA():
 {}
 {
-  linha() (";")?
+  linha()
 }
 
 void linha():
 {}
 {
     // TODO: Verificar itens aqui!
-    <DECIMAL_LITERAL> | <STRING> | <DECLARACAO_VARIAVEL> | <EXPRESSAO> | <COMANDO_ENTRADA> | <COMANDO_SAIDA> | <OP_ATRIBUICAO>
+    declaracaoImport() | <DECLARACAO_VARIAVEL> | <EXPRESSAO> | <COMANDO_ENTRADA> | <COMANDO_SAIDA> | <OP_ATRIBUICAO> | (expressaoLogica()) (";")?
+}
+
+void declaracaoImport():
+{}
+{
+  <IMPORT> (<VAZIO>)+ <IDENTIFICADOR> (<VAZIO>)+ <FROM> (<VAZIO>)+ <IDENTIFICADOR> (<VAZIO>)?
+}
+
+void membroCondicao():
+{}
+{
+  <IDENTIFICADOR> | <DECIMAL_LITERAL> | <STRING>
+}
+
+void condicao():
+{}
+{
+  (membroCondicao()) (<SIMBOLO_RELACIONAL> (membroCondicao()))*
+}
+
+void expressaoLogica():
+{}
+{
+  (condicao()) (<SIMBOLO_BOOLEANO> (condicao()))*
 }
