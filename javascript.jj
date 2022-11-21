@@ -1,20 +1,31 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
  */
+
 options
 {
-  static = true;
+  static = false;
 }
 
 PARSER_BEGIN(javascript)
+
+import java.io.File;
+import java.util.Scanner;
 
 public class javascript
 {
   public static void main(String args []) throws ParseException
   {
     try {
-		String programa = Arquivo.Read("./ex.txt");
-		new javascript(new java.io.StringReader(programa)).PROGRAMA();
+		//String programa = Arquivo.Read("./ex.txt");
+        File file = new File("./ex.txt");
+        Scanner sc = new Scanner(file);
+
+        while (sc.hasNextLine()) {
+            System.out.println("Aqui");
+		    new javascript(new java.io.StringReader(sc.nextLine())).PROGRAMA();
+        }
+		// new javascript(new java.io.StringReader(programa)).PROGRAMA();
 		System.out.println("\n\nA Sintaxe Correta. Tokens Identificados.");
 	}catch(Throwable e) {
 		System.out.println("\n\nErro na sintaxe: "+e.getMessage());
@@ -45,26 +56,6 @@ SKIP:
 	| < ~[]> 
 }
 
-// Palavras Reservadas -----------------------------------------------------------------------------------------------------------------
-TOKEN:
-{		<NULL: "null">
-	|	<UNDEFINED: "undefined">
-	|	<IMPORT: "import">
-	|	<FROM: "from">
-	|	<CLASS: "class">
-	|	<RETURN: "return">
-	|	<PRINT: "console.log">
-	|	<PROMPT: "prompt">
-	|	<IF: "if">
-	|	<ELSE: "else">
-	|	<WHILE: "while">
-	|	<TRUE: "true">
-	|   <FALSE: "false">
-	|   <ERROR: "err">
-	|	<SWITCH: "switch">
-	|	<CASE: "case">
-}
-
 // primitivos ---------------------------------------------------------------------------------------------------------------------
 TOKEN:
 {
@@ -91,7 +82,27 @@ TOKEN:
     < TIPO_VARIAVEL: ("let" | "var" | "const") <VAZIO> >
 }
 
-//Delimitadores -----------------------------------------------------------------------------------------------------------------------
+// Palavras Reservadas -----------------------------------------------------------------------------------------------------------------
+TOKEN:
+{		<NULL: "null">
+	|	<UNDEFINED: "undefined">
+	|	<IMPORT: "import">
+	|	<FROM: "from">
+	|	<CLASS: "class">
+	|	<RETURN: "return">
+	|	<PRINT: "console.log">
+	|	<PROMPT: "prompt">
+	|	<IF: "if">
+	|	<ELSE: "else">
+	|	<WHILE: "while">
+	|	<TRUE: "true">
+	|   <FALSE: "false">
+	|   <ERROR: "err">
+	|	<SWITCH: "switch">
+	|	<CASE: "case">
+}
+
+// Characteres -----------------------------------------------------------------------------------------------------------------------
 TOKEN:
 {
 		<AC: "{">
@@ -131,18 +142,6 @@ TOKEN:
 	|	<EXPONENCIAL: "**">
 }
 
-TOKEN:
-{
-    < #OP_ARITMETICO:
-            <SOMA>
-        |   <SUBTRACAO>
-        |   <MUTIPLICACAO>
-        |   <DIVISAO>
-        |   <MODULO>
-        |   <EXPONENCIAL>
-    > 
-}
-
 // Operadores de Atruibuição ---------------------------------------------------------------------------------------------------------------------
 TOKEN:
 {
@@ -160,22 +159,6 @@ TOKEN:
 	| 	<ATRIBUICAO_OR: "|=">
 }
 
-TOKEN:
-{
-    < #SIMBOLO_ATRIBUICAO:
-            <ATRIBUICAO>
-        |   <ATRIBUICAO_SOMA>
-        |   <ATRIBUICAO_SUBTRACAO>
-        |   <ATRIBUICAO_MULTIPLICACAO>
-        |   <ATRIBUICAO_DIVISAO>
-        |   <ATRIBUICAO_RESTO>
-        |   <ATRIBUICAO_EXPONENCIAL>
-        |   <ATRIBUICAO_AND>
-        |   <ATRIBUICAO_XOR>
-        |   <ATRIBUICAO_OR>
-    >
-}
-
 // Operadores Relacionais -----------------------------------------------------------------------------------------------------------------------
 TOKEN:
 {
@@ -187,20 +170,6 @@ TOKEN:
 	|	<DIFERENCA: "!=">
 	|	<IGUALDADE_ESTRITA: "===">
 	|	<DIFERENCA_ESTRITA: "!==">
-}
-
-TOKEN:
-{
-    < #OP_COMPARACAO:
-            <MENOR>
-        |   <MAIOR>
-        |   <MAIOR_IGUAL>
-        |   <MENOR_IGUAL>
-        |   <IGUALDADE>
-        |   <DIFERENCA>
-        |   <IGUALDADE_ESTRITA>
-        |   <DIFERENCA_ESTRITA>
-    >
 }
 
 // Operadores Lógicos ------------------------------------------------------------------------------------------------------------------------------
@@ -248,7 +217,7 @@ TOKEN:
 
 TOKEN:
 {
-    < #LIMITADOR:
+    < #DELIMITADOR:
             <AP>
         |   <AC>
         |   <ACH>
@@ -256,6 +225,78 @@ TOKEN:
         |   <FC>
         |   <FCH>
     >
+}
+
+TOKEN:
+{
+    < #SIMBOLO_BOOLEANO:
+            <AND>
+        |   <OR>
+    >
+}
+
+TOKEN:
+{
+    < #SIMBOLO_RELACIONAL:
+            <MENOR>
+        |   <MAIOR>
+        |   <MAIOR_IGUAL>
+        |   <MENOR_IGUAL>
+        |   <IGUALDADE>
+        |   <DIFERENCA>
+        |   <IGUALDADE_ESTRITA>
+        |   <DIFERENCA_ESTRITA>
+    >
+}
+
+TOKEN:
+{
+    < #SIMBOLO_ATRIBUICAO:
+            <ATRIBUICAO>
+        |   <ATRIBUICAO_SOMA>
+        |   <ATRIBUICAO_SUBTRACAO>
+        |   <ATRIBUICAO_MULTIPLICACAO>
+        |   <ATRIBUICAO_DIVISAO>
+        |   <ATRIBUICAO_RESTO>
+        |   <ATRIBUICAO_EXPONENCIAL>
+        |   <ATRIBUICAO_AND>
+        |   <ATRIBUICAO_XOR>
+        |   <ATRIBUICAO_OR>
+    >
+}
+
+TOKEN:
+{
+    < #SIMBOLO_ARTIMETICO:
+            <SOMA>
+        |   <SUBTRACAO>
+        |   <MUTIPLICACAO>
+        |   <DIVISAO>
+        |   <MODULO>
+        |   <EXPONENCIAL>
+    > 
+}
+
+TOKEN:
+{
+    < #PALAVRAS_RESERVADAS:
+            <NULL>
+        |   <UNDEFINED>
+        |   <IMPORT>
+        |   <FROM>
+        |   <CLASS>
+        |   <RETURN>
+        |   <PRINT>
+        |   <PROMPT>
+        |   <IF>
+        |   <ELSE>
+        |   <WHILE>
+        |   <TRUE>
+        |   <FALSE>
+        |   <ERROR>
+        |   <SWITCH>
+        |   <CASE>
+    > 
 }
 
 //numeros -----------------------------------------------------------------------------------------------------------------------------------------
@@ -305,14 +346,14 @@ TOKEN:
 TOKEN:
 {
     // TODO: Colocar chamarFuncao *********
-    // TODO: Arruamar lógica LIMITADOR
-    < EXPRESSAO: (<DECIMAL_LITERAL> | <STRING> | <BOOLEANO> | <LIMITADOR> ) (<VAZIO>)? ((<OP_ARITMETICO> | <OP_COMPARACAO>) (<VAZIO>)? (<DECIMAL_LITERAL> | <STRING> | <BOOLEANO> | <LIMITADOR>))* >
+    // TODO: Arruamar lógica DELIMITADOR
+    < EXPRESSAO: (<DECIMAL_LITERAL> | <STRING> | <BOOLEANO> | <DELIMITADOR> ) (<VAZIO>)? ((<SIMBOLO_ARTIMETICO> | <SIMBOLO_RELACIONAL>) (<VAZIO>)? (<DECIMAL_LITERAL> | <STRING> | <BOOLEANO> | <DELIMITADOR>))* >
 }
 
 TOKEN:
 {
     // TODO: Colocar declaraçãoDeFuncao ************
-    < OP_ATRIBUICAO: (<TIPO_VARIAVEL>)? <IDENTIFICADOR> <SIMBOLO_ATRIBUICAO> (<EXPRESSAO>)>
+    < OP_ATRIBUICAO: (<TIPO_VARIAVEL>)? <IDENTIFICADOR> (<VAZIO>)? <SIMBOLO_ATRIBUICAO> (<VAZIO>)? (<EXPRESSAO>)>
 }
 
 // Entrada e Saída -----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -356,5 +397,6 @@ void PROGRAMA():
 void linha():
 {}
 {
-  <DECIMAL_LITERAL> | <STRING> | <DECLARACAO_VARIAVEL> | <EXPRESSAO> | <COMANDO_ENTRADA> | <COMANDO_SAIDA>
+    // TODO: Verificar itens aqui!
+    <DECIMAL_LITERAL> | <STRING> | <DECLARACAO_VARIAVEL> | <EXPRESSAO> | <COMANDO_ENTRADA> | <COMANDO_SAIDA> | <OP_ATRIBUICAO>
 }
