@@ -139,7 +139,7 @@ void identFunc():
 void exp():
 {}
 {
-    (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()) ((<OPERADOR_BOOLEANO> | <OPERADOR_RELACIONAL> | <OPERADOR_ARITIMETICO>) (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()))*
+    (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()) ((<OPERADOR_BOOLEANO> | <OPERADOR_RELACIONAL> | <OPERADOR_ARITIMETICO> | <OPERADOR_ATRIBUICAO>) (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()))*
 }
 
 void expressao():
@@ -193,43 +193,6 @@ void lacoWhile():
     <WHILE> "(" expressao() ")" escopo()
 }
 
-void listaStrings():
-{}
-{
-    <STRING> maisStrings()
-}
-
-void maisStrings():
-{}
-{
-    "," <STRING> maisStrings() | Empty()
-}
-
-void listaParametrosDefinicao():
-{}
-{
-    expressao() maisParametrosDefinicao()
-}
-
-void maisParametrosDefinicao():
-{}
-{
-    <VIRGULA> expressao() maisParametrosDefinicao() | Empty()
-}
-
-void declaracaoDeFuncao():
-{}
-{
-      <FUNCTION> (<IDENTIFICADOR>)? "(" (listaParametrosDefinicao())? ")" escopoFuncao()
-    | (<NEW> <FUNCTION_UPPER> | <FUNCTION_UPPER>)? "(" (listaParametrosDefinicao())? ")" "=>" escopoFuncao()
-}
-
-void chamarFuncao():
-{}
-{
-    <IDENTIFICADOR> "(" (listaParametrosChamada())? ")"
-}
-
 void listaParametrosChamada():
 {}
 {
@@ -240,4 +203,17 @@ void maisParametrosChamada():
 {}
 {
     "," expressao() maisParametrosChamada() | Empty()
+}
+
+void declaracaoDeFuncao():
+{}
+{
+      <FUNCTION> (<IDENTIFICADOR>)? "(" (listaParametrosChamada())? ")" escopoFuncao()
+    | (<NEW> <FUNCTION_UPPER> | <FUNCTION_UPPER>)? "(" (listaParametrosChamada())? ")" "=>" escopoFuncao()
+}
+
+void chamarFuncao():
+{}
+{
+    <IDENTIFICADOR> "(" (listaParametrosChamada())? ")"
 }
