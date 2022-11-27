@@ -1,12 +1,14 @@
-import pacote from pasta;
-let variavel = 2
-0.0
-prompt("entrada")
-prompt('entrada')
-prompt(`entrada`)
-console.log("aaaaaa")
-console.log('aaaaaa')
-console.log(`TESTE UM DOI TRES`)
-asd > 123
-111 < "asdd"
-111 && "asdd"
+new Function ( aeses ) => { 
+    prompt("here") 
+}
+Function ( aeses ) => { 
+    prompt("here") 
+}
+( aeses ) => { 
+    prompt("here") 
+}
+function novaFuncao ( aeses ) => { 
+    prompt("here") 
+}
+novaFuncao()
+novaFuncao( asdas )
