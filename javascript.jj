@@ -87,7 +87,7 @@ TOKEN:{
 //Identificadores
 TOKEN:
 {
-  < IDENTIFICADOR :  (<LETRA>| "$" | "_" ) (<LETRA> | <DIGITO>| "$" | "_ ")* >
+  < IDENTIFICADOR :  (<LETRA>| "$" | "_" ) (<LETRA> | <DIGITO>| "$" | "_ ")* > : DEFAULT
 }
 
 //Vazio
@@ -105,14 +105,13 @@ void INICIO():
 void linha():
 {}
 {
-    ( declaracaoDeFuncao()
-    | chamarFuncao() 
-    | declaracaoVariavel()
-    | comandoEntrada()
-    | comandoSaida()
-    | atribuicao()
-    | condicionalSe()
-    | lacoWhile())
+    LOOKAHEAD( 1 )
+        expressao()
+    |   comandoEntrada()
+    |   comandoSaida()
+    |   atribuicao()
+    |   condicionalSe()
+    |   lacoWhile()
 }
 
 void escopo():
@@ -127,22 +126,25 @@ void escopoFuncao():
   "{" (linha())* (<RETURN> expressao())? "}"
 }
 
+void identFunc():
+{}
+{
+    LOOKAHEAD( <IDENTIFICADOR> )
+    <IDENTIFICADOR> | chamarFuncao()
+}
+
 void expressao():
 {}
 {
-  (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | <IDENTIFICADOR> | chamarFuncao() | declaracaoDeFuncao()) ((<OPERADOR_RELACIONAL> | <OPERADOR_ARITIMETICO>) (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | <IDENTIFICADOR> | chamarFuncao() | declaracaoDeFuncao()))*
-}
-
-void declaracaoVariavel():
-{}
-{
-    <TIPO_VARIAVEL> <IDENTIFICADOR>
+    (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()) ((<OPERADOR_BOOLEANO> | <OPERADOR_RELACIONAL> | <OPERADOR_ARITIMETICO>) (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()))*
 }
 
 void atribuicao():
 {}
 {
-    (<TIPO_VARIAVEL>)? <IDENTIFICADOR> <OPERADOR_ATRIBUICAO> (expressao())
+    LOOKAHEAD( 2 )
+      <TIPO_VARIAVEL> <IDENTIFICADOR>
+    | (<TIPO_VARIAVEL>)? <IDENTIFICADOR> <OPERADOR_ATRIBUICAO> (expressao())
 }
 
 void comandoEntrada():
@@ -157,28 +159,16 @@ void comandoSaida():
     <CONSOLE> ("(") listaParametrosChamada() (")")
 }
 
-void condicao():
-{}
-{
-    expressao() (<OPERADOR_RELACIONAL> expressao())*
-}
-
-void expressaoLogica():
-{}
-{
-    condicao() (<OPERADOR_BOOLEANO> condicao())*
-}
-
 void condicionalSe():
 {}
 {
-    <IF> "(" expressaoLogica() ")" escopo() (condicionalSenaoSe() | condicionalSenao())?
+    <IF> "(" expressao() ")" escopo() (condicionalSenaoSe() | condicionalSenao())?
 }
 
 void condicionalSenaoSe():
 {}
 {
-    <ELSE_IF> "(" expressaoLogica() ")" escopo() (condicionalSenaoSe() | condicionalSenao())?
+    <ELSE_IF> "(" expressao() ")" escopo() (condicionalSenaoSe() | condicionalSenao())?
 }
 
 void condicionalSenao():
@@ -190,7 +180,7 @@ void condicionalSenao():
 void lacoWhile():
 {}
 {
-    <WHILE> "(" expressaoLogica() ")" escopo()
+    <WHILE> "(" expressao() ")" escopo()
 }
 
 void listaStrings():

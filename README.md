@@ -25,9 +25,9 @@ java nomeDoPrograma
 - [x]  Tipos básicos: string, números (inteiro e real)
 - [x]  Atribuições
 - [x]  Comando de entrada e saída
-- [x]  Expressões
-- [x]  operadores relacionais, aritméticos e booleanos
+- [X]  Expressões
+- [X]  operadores relacionais, aritméticos e booleanos
 - [X]  Estrutura condicional simples e composta
-- [X]  Um tipo de laço
-- [X]  Declaração de funções
-- [X]  Chamada de funções
+- [ ]  Um tipo de laço
+- [ ]  Declaração de funções
+- [ ]  Chamada de funções

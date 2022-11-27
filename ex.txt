@@ -1,14 +1,4 @@
-new Function ( aeses ) => { 
-    prompt("here") 
-}
-Function ( aeses ) => { 
-    prompt("here") 
-}
-( aeses ) => { 
-    prompt("here") 
-}
-function novaFuncao ( aeses ) => { 
-    prompt("here") 
-}
-novaFuncao()
-novaFuncao( asdas )
+10 > 50 < 30
+10 < 30 && 10
+10 && 20 || 30
+5 <= 3 + 5 || 20 != 30
