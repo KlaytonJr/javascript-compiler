@@ -52,8 +52,10 @@ TOKEN:
   | < OPERADOR_ATRIBUICAO : ( "=" | "+=" | "-=" | "*=" | "**=" | "/=" | "%=" | "|=" | "&=" | "^=" )>
   | < OPERADOR_RELACIONAL : ( ">" | "<" | ">=" | "<=" | "!=" | "!==" | "==" | "===" )>
   | < OPERADOR_BOOLEANO : ( "&&" | "||"  )>
-  // | < LIMITADOR : ( "(" | ")" | "[" | "]" | "{" | "}" )>
+  //| < LIMITADOR : ( "(" | ")" | "[" | "]" | "{" | "}" )>
   | < ASPAS: ( "\"" | "\'" | "`" ) >
+  | < AP: ( "(" ) > : DEFAULT
+  | < FP: ( ")" ) > : DEFAULT
 }
 
 TOKEN:
@@ -133,10 +135,17 @@ void identFunc():
     <IDENTIFICADOR> | chamarFuncao()
 }
 
-void expressao():
+void exp():
 {}
 {
     (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()) ((<OPERADOR_BOOLEANO> | <OPERADOR_RELACIONAL> | <OPERADOR_ARITIMETICO>) (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()))*
+}
+
+void expressao():
+{}
+{
+    LOOKAHEAD("(") ( "(" exp() ")" )
+    <AP> exp() <FP> | exp()
 }
 
 void atribuicao():

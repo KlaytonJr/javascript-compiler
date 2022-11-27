@@ -28,6 +28,6 @@ java nomeDoPrograma
 - [X]  Expressões
 - [X]  operadores relacionais, aritméticos e booleanos
 - [X]  Estrutura condicional simples e composta
-- [ ]  Um tipo de laço
-- [ ]  Declaração de funções
-- [ ]  Chamada de funções
+- [X]  Um tipo de laço
+- [X]  Declaração de funções
+- [X]  Chamada de funções
