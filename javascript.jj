@@ -56,6 +56,7 @@ TOKEN:
   | < ASPAS: ( "\"" | "\'" | "`" ) >
   | < AP: ( "(" ) > : DEFAULT
   | < FP: ( ")" ) > : DEFAULT
+  | < VIRGULA: ( "," ) > : DEFAULT
 }
 
 TOKEN:
@@ -213,7 +214,7 @@ void listaParametrosDefinicao():
 void maisParametrosDefinicao():
 {}
 {
-    "," expressao() maisParametrosDefinicao() | Empty()
+    <VIRGULA> expressao() maisParametrosDefinicao() | Empty()
 }
 
 void declaracaoDeFuncao():
