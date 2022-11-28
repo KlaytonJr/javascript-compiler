@@ -29,10 +29,11 @@ if(idade > 18) {
 var contador = 0;
 while(contador < 5) {
     prompt("Olá");
-    if (contador === 3) {
+    if (!contador === 3) {
         console.log("É 3");
     } else if (contador == 2) {
         console.log("É 2 sem ser estritamente");
     }
     contador = contador + 1;
+		cont++;
 }

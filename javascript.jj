@@ -115,6 +115,19 @@ void linha():
     |   atribuicao()
     |   condicionalSe()
     |   lacoWhile()
+    |   before()
+}
+
+void before():
+{}
+{
+  ("--" | "++") <IDENTIFICADOR>
+}
+
+void after():
+{}
+{
+  <IDENTIFICADOR> ("--" | "++")
 }
 
 void escopo():
@@ -136,7 +149,7 @@ void identFunc():
     <IDENTIFICADOR> | chamarFuncao()
 }
 
-void exp():
+void membroExp():
 {}
 {
     (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()) ((<OPERADOR_BOOLEANO> | <OPERADOR_RELACIONAL> | <OPERADOR_ARITIMETICO> | <OPERADOR_ATRIBUICAO>) (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()))*
@@ -145,8 +158,8 @@ void exp():
 void expressao():
 {}
 {
-    LOOKAHEAD("(") ( "(" exp() ")" )
-    <AP> exp() <FP> | exp()
+    LOOKAHEAD("(") ( "(" membroExp() ")" )
+    ("!")? <AP> membroExp() <FP> | ("!")? membroExp()
 }
 
 void atribuicao():
