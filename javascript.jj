@@ -19,17 +19,23 @@ public class javascript
     try {
         File file = new File("./ex.txt");
         Scanner sc = new Scanner(file);
-
         String line = "";
 
         while (sc.hasNextLine()) {
-            String actual_line = sc.nextLine();
-            line += actual_line;
-            System.out.println(actual_line);
+            try {
+                String actual_line = sc.nextLine();
+                line += actual_line;
+                System.out.println(actual_line);
+                new javascript(new java.io.StringReader(actual_line)).INICIO();
+                System.out.println("\n\nA Sintaxe Correta. Tokens Identificados.");
+            } catch(Throwable e) {
+                //System.out.println("\n\nErro na sintaxe: " + e.getMessage());
+                throw e;
+            }
         }
         //System.out.println(line);
-        new javascript(new java.io.StringReader(line)).INICIO();
-		System.out.println("\n\nA Sintaxe Correta. Tokens Identificados.");
+        //new javascript(new java.io.StringReader(line)).INICIO();
+		//System.out.println("\n\nA Sintaxe Correta. Tokens Identificados.");
 	}catch(Throwable e) {
 		System.out.println("\n\nErro na sintaxe: " + e.getMessage());
 	}
@@ -108,14 +114,15 @@ void INICIO():
 void linha():
 {}
 {
-    LOOKAHEAD( 1 )
-        expressao()
+    //LOOKAHEAD( 1 )
+    //    expressao()
+    declaracaoDeFuncao()
     |   comandoEntrada()
     |   comandoSaida()
-    |   atribuicao()
-    |   condicionalSe()
-    |   lacoWhile()
-    |   before()
+    //|   atribuicao()
+    //|   condicionalSe()
+    //|   lacoWhile()
+    //|   before()
 }
 
 void before():
