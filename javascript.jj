@@ -21,21 +21,29 @@ public class javascript
         Scanner sc = new Scanner(file);
         String line = "";
 
+        Boolean opened = false;
+
         while (sc.hasNextLine()) {
             try {
                 String actual_line = sc.nextLine();
-                line += actual_line;
                 System.out.println(actual_line);
-                new javascript(new java.io.StringReader(actual_line)).INICIO();
-                System.out.println("\n\nA Sintaxe Correta. Tokens Identificados.");
+                if (actual_line.endsWith("{") || opened) {
+                    opened = true;
+                    line += actual_line;
+                    if (actual_line.startsWith("}") && !actual_line.endsWith("{")) {
+                        opened = false;
+                        System.out.println(line);
+                        new javascript(new java.io.StringReader(line)).INICIO();
+                        line = "";
+                    }
+                } else {
+                    new javascript(new java.io.StringReader(actual_line)).INICIO();
+                }
             } catch(Throwable e) {
-                //System.out.println("\n\nErro na sintaxe: " + e.getMessage());
                 throw e;
             }
         }
-        //System.out.println(line);
-        //new javascript(new java.io.StringReader(line)).INICIO();
-		//System.out.println("\n\nA Sintaxe Correta. Tokens Identificados.");
+        System.out.println("\nA Sintaxe Correta. Tokens Identificados.\n");
 	}catch(Throwable e) {
 		System.out.println("\n\nErro na sintaxe: " + e.getMessage());
 	}
@@ -45,137 +53,142 @@ public class javascript
 PARSER_END(javascript)
 
 SKIP:
-{	" " | "\r" | "\t" | "\n" 
-}
+{ " " | "\r" | "\t" | "\n" }
+
+
+/* ========================================================================== */
+/* Characteres Padrão */
+/* ========================================================================== */
 
 TOKEN:
 {
-    < #DIGITO: ["0" - "9"] >
-  | < #LETRA : (["a" - "z"] | ["A" - "Z"]) >
-  | < TIPO_VARIAVEL: ("let" | "var" | "const") >
-  | < BOOLEANO: ( "true" | "false" ) >
-  | < OPERADOR_ARITIMETICO : ( "+" | "-" | "*" | "**" | "/" | "%" )>
-  | < OPERADOR_ATRIBUICAO : ( "=" | "+=" | "-=" | "*=" | "**=" | "/=" | "%=" | "|=" | "&=" | "^=" )>
-  | < OPERADOR_RELACIONAL : ( ">" | "<" | ">=" | "<=" | "!=" | "!==" | "==" | "===" )>
-  | < OPERADOR_BOOLEANO : ( "&&" | "||"  )>
-  //| < LIMITADOR : ( "(" | ")" | "[" | "]" | "{" | "}" )>
-  | < ASPAS: ( "\"" | "\'" | "`" ) >
-  | < AP: ( "(" ) > : DEFAULT
-  | < FP: ( ")" ) > : DEFAULT
-  | < VIRGULA: ( "," ) > : DEFAULT
+        < #DIGITO: ["0" - "9"] >
+    |   < #LETRA : (["a" - "z"] | ["A" - "Z"]) >
+    |   < ASPAS: "\"" | "\'" | "`" >
+    |   < NEGACAO: "!" >
+    |   < INCREMENTO: "++" >
+    |   < DECREMENTO: "--" >
 }
+
+
+/* ========================================================================== */
+/* Palavras Reservadas */
+/* ========================================================================== */
 
 TOKEN:
 {
-      < IF: "if" > : DEFAULT
-    | < ELSE_IF: "else if" > : DEFAULT
-    | < ELSE: "else" > : DEFAULT
-    | < WHILE: "while" > : DEFAULT
-    | < CONSOLE: "console.log" > : DEFAULT
-    | < FUNCTION: "function" > : DEFAULT
-    | < FUNCTION_UPPER: "Function" > : DEFAULT
-    | < RETURN: "return" > : DEFAULT
-    | < NEW: "new" > : DEFAULT
-    // Babosa
-    | < PROMPT: "prompt" | " prompt" > : DEFAULT
+        < RETURN: "return" > : DEFAULT
+    |   < IF: "if" > : DEFAULT
+    |   < ELSE_IF: "else if" > : DEFAULT
+    |   < ELSE: "else" > : DEFAULT
+    |   < WHILE: "while" > : DEFAULT
+    |   < PRINT: "console.log" > : DEFAULT
+    |   < PROMPT: "prompt" > : DEFAULT
+    |   < NULL: "null" > : DEFAULT
+    |   < TRUE: "true" > : DEFAULT
+    |   < FALSE: "false" > : DEFAULT
+    |   < NEW: "new" > : DEFAULT
+    |   < FUNCTION: "function" > : DEFAULT
+    |   < FUNCTION_UPPER: "Function" > : DEFAULT
+    |   < TYPE: "let" | "var" | "const" > : DEFAULT
 }
 
-//numeros especificação
+
+/* ========================================================================== */
+/* Tipos Básicos - Inteiro, Real, String + Identificador */
+/* ========================================================================== */
+
 TOKEN:
 {                                                                      
-  < INTEIRO:(("+" | "-")? (<DIGITO>)+ (".")? ("0")*) | (("+" | "-")? (".") ("0")+ ) ~["1","2","3","4","5","6","7","8","9","."]> 
-| < REAL: ("+" | "-")? (<DIGITO>)* (".") (<DIGITO>)+ ( ("E" | "e" ) ( "+" | "-" )? (<DIGITO>)+ )? >
+        < INTEIRO:(("+" | "-")? (<DIGITO>)+ (".")? ("0")*) | (("+" | "-")? (".") ("0")+ )> 
+    |   < REAL: ("+" | "-")? (<DIGITO>)* (".") (<DIGITO>)+ ( ("E" | "e" ) ( "+" | "-" )? (<DIGITO>)+ )? >
 
 }
 
 // TO DO: Add caracteres especiais
 TOKEN:{
-  < STRING: <ASPAS> (<LETRA> | <DIGITO> | " ")* <ASPAS> >
+    < STRING: <ASPAS> (<LETRA> | <DIGITO> | " ")* <ASPAS> >
 }
 
-//Identificadores
 TOKEN:
 {
-  < IDENTIFICADOR :  (<LETRA>| "$" | "_" ) (<LETRA> | <DIGITO>| "$" | "_ ")* > : DEFAULT
-}
-
-//Vazio
-void Empty() : {}
-{
-    {}
+    < IDENTIFICADOR : (<LETRA>| "$" | "_" ) (<LETRA> | <DIGITO>| "$" | "_ ")* >
 }
 
 void INICIO():
 {}
 {
-   linha() (";")?
+   linha() 
 }
 
 void linha():
 {}
 {
-    //LOOKAHEAD( 1 )
-    //    expressao()
-    declaracaoDeFuncao()
-    |   comandoEntrada()
-    |   comandoSaida()
-    //|   atribuicao()
-    //|   condicionalSe()
-    //|   lacoWhile()
-    //|   before()
+    (
+        expressao() (";")? 
+    |   comandoEntrada() (";")? 
+    |   comandoSaida() (";")? 
+    |   condicionalSe() 
+    |   lacoWhile() (";")? 
+    |   declaracaoDeFuncao())* (";")? 
 }
 
-void before():
-{}
-{
-  ("--" | "++") <IDENTIFICADOR>
-}
 
-void after():
-{}
-{
-  <IDENTIFICADOR> ("--" | "++")
-}
-
-void escopo():
-{}
-{
-  "{"  (linha())* "}"
-}
-
-void escopoFuncao():
-{}
-{
-  "{" (linha())* (<RETURN> expressao())? "}"
-}
-
-void identFunc():
-{}
-{
-    LOOKAHEAD( <IDENTIFICADOR> )
-    <IDENTIFICADOR> | chamarFuncao()
-}
-
-void membroExp():
-{}
-{
-    (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()) ((<OPERADOR_BOOLEANO> | <OPERADOR_RELACIONAL> | <OPERADOR_ARITIMETICO> | <OPERADOR_ATRIBUICAO>) (<INTEIRO> | <REAL> | <STRING> | <BOOLEANO> | identFunc() | declaracaoDeFuncao()))*
-}
+/* ========================================================================== */
+/* Expressão */
+/* ========================================================================== */
 
 void expressao():
 {}
 {
-    LOOKAHEAD("(") ( "(" membroExp() ")" )
-    ("!")? <AP> membroExp() <FP> | ("!")? membroExp()
+    [<NEGACAO>] ( 
+        (
+               (<TYPE>)? <IDENTIFICADOR> (ChamadaDeMetodo() | <INCREMENTO> | <DECREMENTO>)?
+            |   ExpressaoLiteral()
+            |   "(" (expressao())? ("," expressao())*  ")" ("=>" escopoFuncao())?
+        ) (Atribuicao() | ComparacaoLogica() | ComparacaoRelacional() | expressaoNumerica())? 
+    )
 }
 
-void atribuicao():
+void ExpressaoLiteral():
 {}
 {
-    LOOKAHEAD( 2 )
-      <TIPO_VARIAVEL> <IDENTIFICADOR>
-    | (<TIPO_VARIAVEL>)? <IDENTIFICADOR> <OPERADOR_ATRIBUICAO> (expressao())
+    <INTEIRO> | <REAL> | <STRING>
 }
+
+
+/* ========================================================================== */
+/* Operações */
+/* ========================================================================== */
+
+void Atribuicao():
+{}
+{
+  "=" expressao()
+}
+
+void ComparacaoLogica():
+{}
+{
+  ("&&" | "||") expressao()
+}
+
+void ComparacaoRelacional():
+{}
+{
+  (">" | "<" | ">=" | "<=" | "==" | "!=") expressao()
+}
+
+void expressaoNumerica():
+{}
+{
+  ("+" | "+=" | "-" | "-=" | "*" | "*=" | "/" | "/=" | "%" | "%=") expressao()
+}
+
+
+/* ========================================================================== */
+/* Comando de Entrada e Saída */
+/* ========================================================================== */
 
 void comandoEntrada():
 {}
@@ -186,54 +199,69 @@ void comandoEntrada():
 void comandoSaida():
 {}
 {
-    <CONSOLE> ("(") listaParametrosChamada() (")")
+    <PRINT> ("(") ListaDeArgumentos() (")")
 }
+
+
+/* ========================================================================== */
+/* Se, Senão Se, Senão */
+/* ========================================================================== */
 
 void condicionalSe():
 {}
 {
-    <IF> "(" expressao() ")" escopo() (condicionalSenaoSe() | condicionalSenao())?
+    <IF> "(" expressao() ")" escopoFuncao() (condicionalSenaoSe() | condicionalSenao())?
 }
 
 void condicionalSenaoSe():
 {}
 {
-    <ELSE_IF> "(" expressao() ")" escopo() (condicionalSenaoSe() | condicionalSenao())?
+    <ELSE_IF> "(" expressao() ")" escopoFuncao() (condicionalSenaoSe() | condicionalSenao())?
 }
 
 void condicionalSenao():
 {}
 {
-    <ELSE> escopo()
+    <ELSE> escopoFuncao()
 }
+
+
+/* ========================================================================== */
+/* Laço while */
+/* ========================================================================== */
 
 void lacoWhile():
 {}
 {
-    <WHILE> "(" expressao() ")" escopo()
+    <WHILE> "(" expressao() ")" escopoFuncao()
 }
 
-void listaParametrosChamada():
-{}
-{
-    expressao() maisParametrosChamada()
-}
 
-void maisParametrosChamada():
-{}
-{
-    "," expressao() maisParametrosChamada() | Empty()
-}
+/* ========================================================================== */
+/* Declaração e Chamada de Função */
+/* ========================================================================== */
 
 void declaracaoDeFuncao():
 {}
 {
-      <FUNCTION> (<IDENTIFICADOR>)? "(" (listaParametrosChamada())? ")" escopoFuncao()
-    | (<NEW> <FUNCTION_UPPER> | <FUNCTION_UPPER>)? "(" (listaParametrosChamada())? ")" "=>" escopoFuncao()
+      <FUNCTION> (<IDENTIFICADOR>)? ChamadaDeMetodo() escopoFuncao()
+    | (<NEW> <FUNCTION_UPPER> | <FUNCTION_UPPER>) ChamadaDeMetodo() "=>" escopoFuncao()
 }
 
-void chamarFuncao():
+void escopoFuncao():
 {}
 {
-    <IDENTIFICADOR> "(" (listaParametrosChamada())? ")"
+  "{" linha() (<RETURN> expressao())? "}"
+}
+
+void ChamadaDeMetodo():
+{}
+{
+  "(" (ListaDeArgumentos())? ")"
+}
+
+void ListaDeArgumentos():
+{}
+{
+  expressao() ("," expressao())*
 }
