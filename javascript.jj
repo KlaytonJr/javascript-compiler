@@ -145,7 +145,7 @@ void expressao():
         (
                (<TYPE>)? <IDENTIFICADOR> (ChamadaDeMetodo() | <INCREMENTO> | <DECREMENTO>)?
             |   ExpressaoLiteral()
-            |   "(" (expressao())? ("," expressao())*  ")" ("=>" escopoFuncao())?
+            |   "(" (expressao())? ("," expressao())* ")" ("=>" escopoFuncao())?
         ) (Atribuicao() | ComparacaoLogica() | ComparacaoRelacional() | expressaoNumerica())? 
     )
 }
@@ -164,7 +164,7 @@ void ExpressaoLiteral():
 void Atribuicao():
 {}
 {
-  "=" expressao()
+  "=" (expressao() | declaracaoDeFuncao())
 }
 
 void ComparacaoLogica():
@@ -245,13 +245,14 @@ void declaracaoDeFuncao():
 {}
 {
       <FUNCTION> (<IDENTIFICADOR>)? ChamadaDeMetodo() escopoFuncao()
-    | (<NEW> <FUNCTION_UPPER> | <FUNCTION_UPPER>) ChamadaDeMetodo() "=>" escopoFuncao()
+    | (<NEW> <FUNCTION_UPPER> | <FUNCTION_UPPER>) ChamadaDeMetodo() ("=>" escopoFuncao())?
+    | "(" declaracaoDeFuncao() ")"
 }
 
 void escopoFuncao():
 {}
 {
-  "{" linha() (<RETURN> expressao())? "}"
+  "{" linha() (<RETURN> (expressao() | declaracaoDeFuncao()))? "}"
 }
 
 void ChamadaDeMetodo():

@@ -1,3 +1,183 @@
-() => {
+var nome;
+nome = "Fulano de Tal";
+var idade = 30;
+idade = 30 + 20 - 10*5;
+altura = 1.95;
+
+idade = (30 + (20 / 2)) - 10*5;
+
+function exibirMensagem() {
+    prompt("Ola seja bem vindo");
+}
+
+exibirMensagem();
+
+function somar(A, B) {
+    return A + B
+}
+
+somar(2, 3);
+
+if(idade > 18) {
+    prompt("E maior de idade");
+} else if (idade <= 0) {
+    console.log("So outro");
+} else {
+    console.log("E menor de idade");
+}
+
+var contador = 0;
+while(contador < 5) {
+    prompt("Ola");
+    if (!contador === 3) {
+        console.log("E 3");
+    } else if (contador == 2) {
+        console.log("E 2 sem ser estritamente");
+    }
+    contador = contador + 1;
+		cont++;
+}
+
+if (9 > 10 || 9 && false) {
     prompt("here")
-} 
+} else if (uiiii) {
+    console.log("cavalo")
+} else if (uiiii) {
+    console.log("cavalo")
+} else {
+    prompt("Haduken")
+}
+
+prompt("here")
+console.log("cavalo")
+
+1.0
+5.8
+1
+10
+156
+asdasdasd
+"string"
+
+10 > 8
+9 < 12
+5 >= 6
+8 <= 7
+10 == "10"
+10 === 10
+10 != 20
+20 !== "30"
+
+let asdsada
+let asdasd = 10
+assss = 10
+asd += 20
+asdw -= 20
+asde *= 20
+asdd /= 20
+asdf **= 20
+asdc %= 20
+asd |= 20
+asd &= 20
+asd ^= 20
+
+10 + 20
+10 - 20
+10 * 20
+10 / 20
+10 ** 20
+10 % 20
+
+10 && 20
+10 || 20
+
+10 > 50 < 30
+10 < 30 && 10
+10 && 20 || 30
+5 <= 3 + 5 || 20 != 30
+
+while ( 5 <= 3 + 5 || 20 != 30 ) {
+    console.log("here")
+}
+
+while( 5 <= 3 + 5 || 20 != 30 ){
+    console.log("here")
+}
+
+new Function () => {
+  prompt("here")
+}
+Function () => {
+  prompt("here")
+}
+() => {
+  prompt("here")
+}
+function nomeDaFuncao () {
+  prompt("here")
+}
+
+new Function ( asdasd = 10 ) => {
+  prompt("here");
+};
+Function ( asdasd ) => {
+  prompt("here")
+}
+( asdasd ) => {
+  prompt("here");
+};
+function nomeDaFuncao ( asdasd ) {
+  prompt("here")
+}
+
+const myFunction = function namedFunction () {
+  prompt("here")
+}
+
+const myFunction = function () {
+  prompt("here")
+}
+
+const multiply = new Function('x', 'y', 'return x');
+
+const y = function x() {};
+
+const foo = new Function() => {
+    const bar = "FOO";
+    return function () { 
+        alert(bar); 
+    }
+}();
+foo();
+
+nomeDaFuncao()
+nomeDaFuncao( asdasd )
+nomeDaFuncao( aaa );
+nomeDaFuncao( 10 < 5 );
+
+let ehPar = 10
+
+if (ehPar < 8) {
+    let i
+    while (i < 5) {
+
+        if (i <= 2) {
+            prompt("cavalo")
+        } else {
+            console.log("Egua doido")
+        }
+
+        i += 1;
+    }
+} else if (ehPar = 10) {
+    console.log("deu 10");
+} else if (ehPar > 15) {
+    console.log("maior que 15")
+} else {
+    prompt("Haduken");
+}
+
+3 > 4
+(3 > 4 || (6 + 8)) && (5 <= 3)
+
+if (((a + b) > 3) && (c < 9)) {}
