@@ -153,7 +153,7 @@ void expressao():
 void ExpressaoLiteral():
 {}
 {
-    <INTEIRO> | <REAL> | <STRING>
+    <INTEIRO> | <REAL> | <STRING> | <TRUE> | <FALSE>
 }
 
 
@@ -176,13 +176,13 @@ void ComparacaoLogica():
 void ComparacaoRelacional():
 {}
 {
-  (">" | "<" | ">=" | "<=" | "==" | "!=") expressao()
+  (">" | "<" | ">=" | "<=" | "==" | "!=" | "!==" | "===") expressao()
 }
 
 void expressaoNumerica():
 {}
 {
-  ("+" | "+=" | "-" | "-=" | "*" | "*=" | "/" | "/=" | "%" | "%=") expressao()
+  ("+" | "+=" | "-" | "-=" | "*" | "**" | "**=" | "*=" | "/" | "/=" | "%" | "%=" | "|=" | "^=" | "&=") expressao()
 }
 
 
