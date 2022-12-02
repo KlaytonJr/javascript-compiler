@@ -161,13 +161,11 @@ void linha():
 void expressao():
 {}
 {
-    ([<NEGACAO>] ( 
-        (
-               (<TYPE> | (<INCREMENTO> | <DECREMENTO>))? <IDENTIFICADOR> (ChamadaDeMetodo() | <INCREMENTO> | <DECREMENTO>)?
-            |   ExpressaoLiteral()
-            |   "(" (expressao())? ("," expressao())* ")" ("=>" escopoFuncao())?
-        ) (Atribuicao() | ComparacaoLogica() | ComparacaoRelacional() | expressaoNumerica())? 
-    ))
+    ((
+        (<TYPE> | (<INCREMENTO> | <DECREMENTO> | <NEGACAO>))? <IDENTIFICADOR> (ChamadaDeMetodo() | <INCREMENTO> | <DECREMENTO>)?
+        |   ExpressaoLiteral()
+    ) (Operacoes())? )
+    |   "(" (expressao())? ("," expressao())* ")" ( ("=>" escopoFuncao()) | Operacoes() )?
 }
 
 void ExpressaoLiteral():
@@ -180,6 +178,12 @@ void ExpressaoLiteral():
 /* ========================================================================== */
 /* Operações */
 /* ========================================================================== */
+
+void Operacoes():
+{}
+{
+  (Atribuicao() | ComparacaoLogica() | ComparacaoRelacional() | expressaoNumerica())
+}
 
 // A atribuição, pode atribuir uma expressao ou a declaração de função a uma variável
 void Atribuicao():
