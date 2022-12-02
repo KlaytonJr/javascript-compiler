@@ -167,7 +167,7 @@ if (ehPar < 8) {
         if (i <= 2) {
             prompt("cavalo")
         } else {
-            console.log("Egua doido")
+            console.log("Egua > doido")
         }
 
         i += 1;
@@ -177,7 +177,7 @@ if (ehPar < 8) {
 } else if (ehPar > 15) {
     console.log("maior que 15")
 } else {
-    prompt("Haduken");
+    prompt("Ha,du:ke;n");
 }
 
 3 > 4

@@ -57,6 +57,10 @@ SKIP:
 
 
 /* ========================================================================== */
+/*                                   TOKENS                                   */
+/* ========================================================================== */
+
+/* ========================================================================== */
 /* Characteres Padrão */
 /* ========================================================================== */
 
@@ -98,22 +102,32 @@ TOKEN:
 /* Tipos Básicos - Inteiro, Real, String + Identificador */
 /* ========================================================================== */
 
+// Inteiro -> 2 ; 2 ; 2. ; 2.0; +2 ; +2. ; +2.0 ; -2 ; -2. ; -20.0 
+// Real -> 2.1 ; .2 ; +2.2 ; -2.2; +.2 ; -.2 ; +2.3E+20 ; +2.3E-20 ; -2.3E-20 ; -2.3E+20
 TOKEN:
 {                                                                      
         < INTEIRO:(("+" | "-")? (<DIGITO>)+ (".")? ("0")*) | (("+" | "-")? (".") ("0")+ )> 
     |   < REAL: ("+" | "-")? (<DIGITO>)* (".") (<DIGITO>)+ ( ("E" | "e" ) ( "+" | "-" )? (<DIGITO>)+ )? >
-
 }
 
-// TO DO: Add caracteres especiais
+// " Qualquer letra, digito, espaço ou caracter especial (n vezes) "
 TOKEN:{
-    < STRING: <ASPAS> (<LETRA> | <DIGITO> | " ")* <ASPAS> >
+    < STRING: <ASPAS> (<LETRA> | <DIGITO> | " " | ("+" | "=" | "-" | "=" | "*" | "**" | "/" | "%" | "|" | "^" | "&" | "," | "." | ":" | ";" | "{" | "}" | "[" | "]" | "(" | ")" | "~" | "@" | "#" | "_" | "<" | ">" | "!") )* <ASPAS> >
 }
 
+// Pode iniciar com letra, $ ou _ e em seguida seguido dos mesmo caracteres com a adição de digito
+// $variavel ; _variavel_ ; variavel ; variavel2   etc...
 TOKEN:
 {
     < IDENTIFICADOR : (<LETRA>| "$" | "_" ) (<LETRA> | <DIGITO>| "$" | "_ ")* >
 }
+
+/* ========================================================================== */
+/*                                  FUNÇÕES                                   */
+/* ========================================================================== */
+/* ========================================================================== */
+/* Início + linha (padrão do sistema) */
+/* ========================================================================== */
 
 void INICIO():
 {}
@@ -138,16 +152,22 @@ void linha():
 /* Expressão */
 /* ========================================================================== */
 
+// let variavel ; const variavel ; var variavel
+// --variavel ; ++variavel ; variavel++ ; variavel-- ; funcao() ; funcao(param) ; funcao(param, param2)
+// ExpressaoLiteral -> string ou numero(real ou inteiro) ou true ou false
+// ( expressao ) ; ( param ) => { escopoFunc } ; ( param, param2 ) => { escopoFunc }
+
+// Em seguida temos as operações
 void expressao():
 {}
 {
-    [<NEGACAO>] ( 
+    ([<NEGACAO>] ( 
         (
                (<TYPE> | (<INCREMENTO> | <DECREMENTO>))? <IDENTIFICADOR> (ChamadaDeMetodo() | <INCREMENTO> | <DECREMENTO>)?
             |   ExpressaoLiteral()
             |   "(" (expressao())? ("," expressao())* ")" ("=>" escopoFuncao())?
         ) (Atribuicao() | ComparacaoLogica() | ComparacaoRelacional() | expressaoNumerica())? 
-    )
+    ))
 }
 
 void ExpressaoLiteral():
@@ -161,24 +181,28 @@ void ExpressaoLiteral():
 /* Operações */
 /* ========================================================================== */
 
+// A atribuição, pode atribuir uma expressao ou a declaração de função a uma variável
 void Atribuicao():
 {}
 {
   "=" (expressao() | declaracaoDeFuncao())
 }
 
+// Comparar uma expressão a outra expressão
 void ComparacaoLogica():
 {}
 {
   ("&&" | "||") expressao()
 }
 
+// Relacionar uma expressão a outra expressão
 void ComparacaoRelacional():
 {}
 {
   (">" | "<" | ">=" | "<=" | "==" | "!=" | "!==" | "===") expressao()
 }
 
+// Atribuicao com operações de uma expressão a outra expressão
 void expressaoNumerica():
 {}
 {
@@ -190,12 +214,14 @@ void expressaoNumerica():
 /* Comando de Entrada e Saída */
 /* ========================================================================== */
 
+// prompt("Texto de entrada");
 void comandoEntrada():
 {}
 {
     <PROMPT> ("(") <STRING> (")")
 }
 
+// console.log("Texto de saída ou expressao");
 void comandoSaida():
 {}
 {
@@ -207,18 +233,21 @@ void comandoSaida():
 /* Se, Senão Se, Senão */
 /* ========================================================================== */
 
+// if ( expressao ) { escopo } *pode ter ou nao else_if ou else*
 void condicionalSe():
 {}
 {
     <IF> "(" expressao() ")" escopoFuncao() (condicionalSenaoSe() | condicionalSenao())?
 }
 
+// else if ( expressao ) { escopo } *pode ter ou nao else_if ou else*
 void condicionalSenaoSe():
 {}
 {
     <ELSE_IF> "(" expressao() ")" escopoFuncao() (condicionalSenaoSe() | condicionalSenao())?
 }
 
+// else { escopo }
 void condicionalSenao():
 {}
 {
@@ -230,6 +259,7 @@ void condicionalSenao():
 /* Laço while */
 /* ========================================================================== */
 
+// while ( expressao ) { escopo }
 void lacoWhile():
 {}
 {
@@ -241,6 +271,9 @@ void lacoWhile():
 /* Declaração e Chamada de Função */
 /* ========================================================================== */
 
+// function nomeFuncao ( param* ) { escopo } ; function ( param* ) { escopo }
+// new Function ( param* ) => { escopo } ; Function ( param* ) => { escopo }
+// ( declaracaoDeFuncao ) -> terá as funções dentro de parenteses 
 void declaracaoDeFuncao():
 {}
 {
@@ -249,6 +282,7 @@ void declaracaoDeFuncao():
     | "(" declaracaoDeFuncao() ")"
 }
 
+// O escopo vai conter linha e pode retornar expressao ou uma declaração de função
 void escopoFuncao():
 {}
 {
@@ -266,3 +300,5 @@ void ListaDeArgumentos():
 {
   expressao() ("," expressao())*
 }
+
+// A chamada de função está presente dentro da expressão.
