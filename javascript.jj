@@ -106,7 +106,7 @@ TOKEN:
 // Real -> 2.1 ; .2 ; +2.2 ; -2.2; +.2 ; -.2 ; +2.3E+20 ; +2.3E-20 ; -2.3E-20 ; -2.3E+20
 TOKEN:
 {                                                                      
-        < INTEIRO:(("+" | "-")? (<DIGITO>)+ (".")? ("0")*) | (("+" | "-")? (".") ("0")+ )> 
+        < INTEIRO:(("+" | "-")? (<DIGITO>)+ (".")? ("0")*) )> 
     |   < REAL: ("+" | "-")? (<DIGITO>)* (".") (<DIGITO>)+ ( ("E" | "e" ) ( "+" | "-" )? (<DIGITO>)+ )? >
 }
 
@@ -138,13 +138,13 @@ void INICIO():
 void linha():
 {}
 {
-    (
-        expressao() (";")? 
-    |   comandoEntrada() (";")? 
-    |   comandoSaida() (";")? 
+    ((
+        expressao() 
+    |   comandoEntrada()
+    |   comandoSaida()
     |   condicionalSe() 
-    |   lacoWhile() (";")? 
-    |   declaracaoDeFuncao())* (";")? 
+    |   lacoWhile()
+    |   declaracaoDeFuncao()) (";")? )*
 }
 
 
