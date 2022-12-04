@@ -190,3 +190,5 @@ let variavel2 = decremento--;
 
 let variavel3 = ++incremento;
 let variavel4 = --decremento;
+
+let variavel; "a"
