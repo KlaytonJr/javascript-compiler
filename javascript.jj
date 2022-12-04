@@ -102,7 +102,7 @@ TOKEN:
 /* Tipos Básicos - Inteiro, Real, String + Identificador */
 /* ========================================================================== */
 
-// Inteiro -> 2 ; 2 ; 2. ; 2.0; +2 ; +2. ; +2.0 ; -2 ; -2. ; -20.0 
+// Inteiro -> 2 ; 2. ; 2.0; +2 ; +2. ; +2.0 ; -2 ; -2. ; -20.0 
 // Real -> 2.1 ; .2 ; +2.2 ; -2.2; +.2 ; -.2 ; +2.3E+20 ; +2.3E-20 ; -2.3E-20 ; -2.3E+20
 TOKEN:
 {                                                                      
@@ -112,7 +112,7 @@ TOKEN:
 
 // " Qualquer letra, digito, espaço ou caracter especial (n vezes) "
 TOKEN:{
-    < STRING: <ASPAS> (<LETRA> | <DIGITO> | " " | ("+" | "=" | "-" | "=" | "*" | "**" | "/" | "%" | "|" | "^" | "&" | "," | "." | ":" | ";" | "{" | "}" | "[" | "]" | "(" | ")" | "~" | "@" | "#" | "_" | "<" | ">" | "!") )* <ASPAS> >
+    < STRING: <ASPAS> (<LETRA> | <DIGITO> | " " | ("+" | "-" | "=" | "*" | "**" | "/" | "%" | "|" | "^" | "&" | "," | "." | ":" | ";" | "{" | "}" | "[" | "]" | "(" | ")" | "~" | "@" | "#" | "_" | "<" | ">" | "!") )* <ASPAS> >
 }
 
 // Pode iniciar com letra, $ ou _ e em seguida seguido dos mesmo caracteres com a adição de digito
